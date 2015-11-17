@@ -10,12 +10,63 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:paddingTop="30dp"
-        android:text="Mobile Magic" />
+        android:padding="30dp"
+        android:textSize="24sp"
+        android:text="@string/app_name" />
 
-    <FrameLayout
-        android:id="@+id/setup_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="0px" />
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/paired_fragment"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_below="@id/mobile_magic_logo">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/paired_devices_header"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textSize="18sp"-->
+            <!--android:padding="16dp"-->
+            <!--android:text="@string/title_paired_devices"/>-->
+
+        <!--<ListView-->
+            <!--android:id="@+id/paired_devices"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_below="@id/paired_devices_header">-->
+        <!--</ListView>-->
+
+    <!--</RelativeLayout>-->
+
+    <RelativeLayout
+        android:id="@+id/discover_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/mobile_magic_logo">
+
+        <TextView
+            android:id="@+id/discover_devices_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:padding="16dp"
+            android:text="@string/title_other_devices"/>
+
+        <ListView
+            android:id="@+id/other_devices"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/discover_devices_header">
+        </ListView>
+
+        <Button
+            android:id="@+id/vibrate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/other_devices"
+            android:text="Vibrate"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>
