@@ -2,10 +2,16 @@
 
     <string name="app_name">Mobile Magic</string>
 
-    <!--  DeviceListActivity -->
+    <string name="magician_mode">Magician Mode</string>
+    <string name="volunteer_mode">Volunteer Mode</string>
+
+    <string name="magician_listening">[ Listening for volunteer ]</string>
+    <string name="magician_volunteer_found">Volunteer Found\n[ Waiting for card ]</string>
+
+    <string name="connect_instructions">Find the magician</string>
     <string name="title_paired_devices">Paired Devices</string>
     <string name="add_remove">Add/Remove</string>
-    <string name="find">Magician Mode</string>
-    <string name="volunteer">Volunteer Mode</string>
+
+    <string name="select_card">Select a card</string>
 
 </resources>
