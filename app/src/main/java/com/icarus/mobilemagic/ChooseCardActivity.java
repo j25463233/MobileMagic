@@ -3,24 +3,36 @@ package com.icarus.mobilemagic;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.GridView;
+import android.widget.ImageButton;
 
 import java.io.IOException;
-import java.nio.ByteBuffer;
 
 public class ChooseCardActivity extends Activity {
 
     private ConnectedThread mConnectedThread;
+    private GridViewCustomAdapter mCardAdapter;
+    private GridView mGridView;
+    private Deck mDeck;
+    private Card[] mCardArray;
+    private Button mShuffleButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_card);
 
-        // Retrieve the MAC address of the connected client
+        /* This Activity is started by an Intent that contains the MAC address
+         * of a remote Bluetooth device. Get that MAC address and attempt to
+         * connect to the socket. */
         Bundle bundle = getIntent().getExtras();
         String address = bundle.getString("remote_device_address");
         BluetoothDevice remoteDevice =
@@ -28,55 +40,41 @@ public class ChooseCardActivity extends Activity {
         ConnectThread client = new ConnectThread(remoteDevice);
         client.start();
 
-        Button buttonOne = (Button) findViewById(R.id.one);
-        buttonOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String s = "1";
-                byte[] vibes = s.getBytes();
-                mConnectedThread.write(vibes);
-            }
-        });
+        // Fill an array with Cards from a Deck
+        mCardArray = new Card[Deck.DECK_SIZE];
+        mDeck = new Deck();
+        int i = 0;
+        for (Card card : mDeck) {
+            mCardArray[i] = card;
+            i++;
+        }
+        // Give the array of Cards to the Adapter for a GridView
+        mGridView = (GridView) findViewById(R.id.grid_cards);
+        mCardAdapter = new GridViewCustomAdapter(this, mCardArray);
+        mGridView.setAdapter(mCardAdapter);
 
-        Button buttonTwo = (Button) findViewById(R.id.two);
-        buttonTwo.setOnClickListener(new View.OnClickListener() {
+        // SHUFFLE button
+        mShuffleButton = (Button) findViewById(R.id.shuffle_button);
+        mShuffleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String s = "2";
-                byte[] vibes = s.getBytes();
-                mConnectedThread.write(vibes);
+                shuffleDeck();
             }
         });
+    }
 
-        Button buttonThree = (Button) findViewById(R.id.three);
-        buttonThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String s = "3";
-                byte[] vibes = s.getBytes();
-                mConnectedThread.write(vibes);
-            }
-        });
-
-        Button buttonFour = (Button) findViewById(R.id.four);
-        buttonFour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String s = "4";
-                byte[] vibes = s.getBytes();
-                mConnectedThread.write(vibes);
-            }
-        });
-
-        Button buttonFive = (Button) findViewById(R.id.five);
-        buttonFive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String s = "5";
-                byte[] vibes = s.getBytes();
-                mConnectedThread.write(vibes);
-            }
-        });
+    /**
+     * Gives the adapter a shuffled deck instead of an ordered deck.
+     */
+    public void shuffleDeck() {
+        mDeck = new Deck(Deck.SHUFFLED_DECK);
+        int i = 0;
+        for (Card card : mDeck) {
+            mCardArray[i] = card;
+            i++;
+        }
+        mCardAdapter = new GridViewCustomAdapter(this, mCardArray);
+        mGridView.setAdapter(mCardAdapter);
     }
 
     /**
@@ -115,6 +113,63 @@ public class ChooseCardActivity extends Activity {
                     mmSocket.close();
                 } catch (IOException closeException) { /**/ }
             }
+        }
+    }
+
+    public class GridViewCustomAdapter extends ArrayAdapter {
+        Context context;
+        Card[] cards;
+
+        public GridViewCustomAdapter(Context context, Card[] cards) {
+            super(context, 0);
+            this.context = context;
+            this.cards = cards;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            final String id = "" + cards[position].toString();
+            final ImageButton buttonView;
+            View card = convertView;
+
+            if (card == null) {
+                LayoutInflater inflater = ((Activity) context).getLayoutInflater();
+                card = inflater.inflate(R.layout.gridview_card, parent, false);
+                buttonView = (ImageButton) card.findViewById(R.id.card_button);
+                buttonView.setBackgroundResource(getResources()
+                        .getIdentifier(id, "drawable", getPackageName()));
+                buttonView.setTag(id);
+                buttonView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        byte[] bytes = id.getBytes();
+                        mConnectedThread.write(bytes);
+                        Intent showCardIntent = new Intent
+                                (getApplicationContext(), ShowCardActivity.class);
+                        showCardIntent.putExtra("chosen_card", id);
+                        startActivity(showCardIntent);
+                    }
+                });
+            }
+            return card;
+        }
+
+        /**
+         * Overriding these three methods to prevent view recycling because the
+         * card being displayed depends on the position variable in getView(),
+         * which resets to zero for views not displayed yet.
+         */
+        @Override
+        public int getItemViewType(int position) {
+            return position;
+        }
+        @Override
+        public int getViewTypeCount() {
+            return getCount();
+        }
+        @Override
+        public int getCount() {
+            return Deck.DECK_SIZE;
         }
     }
 }

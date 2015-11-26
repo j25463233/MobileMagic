@@ -75,6 +75,7 @@ public class ConnectActivity extends Activity {
                     (getApplicationContext(), ChooseCardActivity.class);
             chooseCardIntent.putExtra("remote_device_address", address);
             startActivity(chooseCardIntent);
+            finish();
         }
     };
 }

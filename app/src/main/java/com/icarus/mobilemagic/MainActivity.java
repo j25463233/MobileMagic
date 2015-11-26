@@ -12,6 +12,8 @@ import java.util.UUID;
 
 public class MainActivity extends Activity {
 
+    // TODO: rename all fields to follow style guidelines
+
     public static final String NAME = "Mobile Magic";
     public static final String MY_UUID_STRING =
             "01bb533e-7481-42ec-b042-2b63e2151d7a";

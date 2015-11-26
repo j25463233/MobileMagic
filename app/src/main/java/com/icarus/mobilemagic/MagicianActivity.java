@@ -53,8 +53,6 @@ public class MagicianActivity extends Activity {
                         (MainActivity.NAME, MainActivity.MY_UUID);
             } catch (IOException e) { return; }
             mmServerSocket = tmp;
-
-            Toast.makeText(getApplicationContext(), "Listening...", Toast.LENGTH_SHORT).show();
         }
 
         public void run() {
