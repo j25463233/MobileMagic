@@ -35,10 +35,10 @@ public class ShowCardActivity extends Activity {
                 String id = inputMessage.obj.toString();
                 showCard(id);
                 vibeCardId(id);
-                try {
-                    Thread.sleep(3000);
-                } catch (InterruptedException ie) { /**/ }
-                vibeCardId(id);
+//                try {
+//                    Thread.sleep(3000);
+//                } catch (InterruptedException ie) { /**/ }
+//                vibeCardId(id);
             }
         };
     }
