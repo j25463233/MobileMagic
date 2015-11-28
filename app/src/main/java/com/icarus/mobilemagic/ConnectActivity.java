@@ -42,7 +42,7 @@ public class ConnectActivity extends Activity {
 
     public void showPairedDevices() {
         mPairedArrayAdapter = new ArrayAdapter<>
-                (this, android.R.layout.simple_list_item_1);
+                (this, R.layout.list_item_paired_device);
         mPairedListView.setAdapter(mPairedArrayAdapter);
         mSetPairedDevices = MainActivity.mBluetoothAdapter.getBondedDevices();
         // If there are paired devices

@@ -34,6 +34,11 @@ public class ShowCardActivity extends Activity {
             public void handleMessage(Message inputMessage) {
                 String id = inputMessage.obj.toString();
                 showCard(id);
+                vibeCardId(id);
+                try {
+                    Thread.sleep(3000);
+                } catch (InterruptedException ie) { /**/ }
+                vibeCardId(id);
             }
         };
     }
@@ -41,11 +46,6 @@ public class ShowCardActivity extends Activity {
     public void showCard(String id) {
         mCardImage = (ImageView) findViewById(R.id.chosen_card_image);
         mCardImage.setBackgroundResource(getResources().getIdentifier(id, "drawable", getPackageName()));
-        vibeCardId(id);
-        try {
-            Thread.sleep(1500);
-        } catch (InterruptedException ie) { /**/ }
-        vibeCardId(id);
     }
 
     public void vibeCardId(String vibeId) {
