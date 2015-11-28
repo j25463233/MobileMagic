@@ -17,11 +17,8 @@ import java.io.IOException;
 
 public class MagicianActivity extends Activity {
 
-    private static TextView statusText;
-    private final String STATUS = "status_change";
     private AcceptThread server;
     private ConnectedThread mConnectedThread;
-    private int numVibes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +27,6 @@ public class MagicianActivity extends Activity {
 
         server = new AcceptThread();
         server.start();
-
-        statusText = (TextView) findViewById(R.id.magician_status);
     }
 
     /**
@@ -77,28 +72,6 @@ public class MagicianActivity extends Activity {
                     break;
                 }
             }
-        }
-    }
-
-    /**
-     * Method used to save the selected card. This method will save a string of
-     * the suit and rank of the card and save it to a file on the internal storage.
-     */
-    public void saveSelectedCard(){
-
-        // will have to use toString();
-        String selectedCard = "";
-
-        // file name
-        String file_name = "Previously Selected Cards";
-
-        //attempt to open and save file
-        try {
-            FileOutputStream fileOutputStream = openFileOutput(file_name, MODE_PRIVATE);
-            fileOutputStream.write(selectedCard.getBytes());
-            fileOutputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
