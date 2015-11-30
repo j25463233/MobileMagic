@@ -8,6 +8,11 @@ import android.os.Message;
 import android.os.Vibrator;
 import android.widget.ImageView;
 
+/**
+ * Activity where the card chosen by a volunteer is displayed while a
+ * corresponding pattern is vibrated, allowing the magician to guess the card
+ * without seeing the screen.
+ */
 public class ShowCardActivity extends Activity {
 
     protected static Handler mHandler;
@@ -23,52 +28,67 @@ public class ShowCardActivity extends Activity {
 
         mVibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
+        // The bundle will contain a card ID if this activity was started on
+        // a volunteer's device. If so, get the card ID and display that card.
         Bundle bundle = getIntent().getExtras();
         try {
             String id = bundle.getString("chosen_card");
             showCard(id);   
-        } catch (NullPointerException noe) { /**/ }
+        } catch (NullPointerException noe) { /* not handled */ }
 
+        // Handles messages received from the Bluetooth connection
         mHandler = new Handler(Looper.getMainLooper()) {
             @Override
             public void handleMessage(Message inputMessage) {
+                // the message should contain a card ID
                 String id = inputMessage.obj.toString();
                 showCard(id);
                 vibeCardId(id);
-//                try {
-//                    Thread.sleep(3000);
-//                } catch (InterruptedException ie) { /**/ }
-//                vibeCardId(id);
             }
         };
     }
 
+    /**
+     * Displays a specified card.
+     * @param id the ID of the card to be displayed
+     */
     public void showCard(String id) {
         mCardImage = (ImageView) findViewById(R.id.chosen_card_image);
-        mCardImage.setBackgroundResource(getResources().getIdentifier(id, "drawable", getPackageName()));
+        mCardImage.setBackgroundResource
+                (getResources().getIdentifier(id, "drawable", getPackageName()));
     }
 
+    /**
+     * Uses the devices vibrator to vibrate one pattern based on the first
+     * character of a string, and again based on the second character.
+     * @param vibeId first character = suit, second character = rank.
+     */
     public void vibeCardId(String vibeId) {
         vibrate(intValueOf(vibeId.substring(0,1)));
         vibrate(intValueOf(vibeId.substring(1)));
     }
 
+    /**
+     * Vibrates the vibrator a specified number of times.
+     * @param numVibes number of vibrations in the sequence
+     */
     public void vibrate(int numVibes) {
         long[] pattern = new long[numVibes * 2 + 1]; // +1 for next statement
         pattern[0] = 0; // milliseconds before first vibration
         for (int i = 1; i < pattern.length; i++) {
-            pattern[i] = VIBE;
-            pattern[++i] = WAIT;
+            pattern[i] = VIBE; // vibration duration in milliseconds
+            pattern[++i] = WAIT; // milliseconds between vibrations
         }
         mVibrator.vibrate(pattern, -1);
+        // forced pause in case there is another vibration sequence to follow
         try {
             Thread.sleep(1500);
         } catch (InterruptedException ie) { /**/ }
     }
 
     /**
-     * Provides an integer value for this suit.
-     * @return the integer value corresponding to this suit
+     * Provides an integer value for a suit.
+     * @return the integer value corresponding to a suit
      */
     public int intValueOf(String s) {
         switch (s) {

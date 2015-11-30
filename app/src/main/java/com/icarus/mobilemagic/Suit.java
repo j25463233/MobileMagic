@@ -2,7 +2,6 @@ package com.icarus.mobilemagic;
 
 /**
  * Enumeration class for the suits of cards.
- * @author Jason Mathews
  */
 public enum Suit {
     CLUBS ("c", 1),

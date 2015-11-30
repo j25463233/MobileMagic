@@ -13,6 +13,11 @@ import android.widget.TextView;
 
 import java.util.Set;
 
+/**
+ * Activity where the volunteer connects with the magician by selecting the
+ * remote device from a list. If the magician does not appear in the list, the
+ * user can scan for it using the device's Bluetooth settings activity.
+ */
 public class ConnectActivity extends Activity {
 
     private Set<BluetoothDevice> mSetPairedDevices;
@@ -26,9 +31,9 @@ public class ConnectActivity extends Activity {
         setContentView(R.layout.activity_connect);
 
         mPairedListView = (ListView) findViewById(R.id.paired_devices);
-        showPairedDevices();
+        showPairedDevices(); // show currently paired devices
 
-        // ADD/REMOVE button
+        // ADD/REMOVE button takes user to Bluetooth settings
         mAddRemoveButton = (Button) findViewById(R.id.btn_add_remove);
         mAddRemoveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -40,6 +45,9 @@ public class ConnectActivity extends Activity {
         });
     }
 
+    /**
+     * Displays a list of currently paired devices
+     */
     public void showPairedDevices() {
         mPairedArrayAdapter = new ArrayAdapter<>
                 (this, R.layout.list_item_paired_device);

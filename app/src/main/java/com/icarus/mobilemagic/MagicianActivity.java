@@ -5,28 +5,25 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
-import android.os.Message;
-import android.os.Vibrator;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * Activity where the Magician is discoverable and waits for a remote device to
+ * connect with a Bluetooth socket.
+ */
 public class MagicianActivity extends Activity {
 
-    private AcceptThread server;
-    private ConnectedThread mConnectedThread;
+    private AcceptThread mServer; // thread waiting for connection/volunteer
+    private ConnectedThread mConnectedThread; // read/write thread
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_magician);
-
-        server = new AcceptThread();
-        server.start();
+        // wait for a connection/volunteer
+        mServer = new AcceptThread();
+        mServer.start();
     }
 
     /**
@@ -38,7 +35,6 @@ public class MagicianActivity extends Activity {
         private BluetoothServerSocket mmServerSocket = null;
 
         public AcceptThread() {
-
             // Use a temporary object that is later assigned to mmServerSocket,
             // because mmServerSocket is final
             BluetoothServerSocket tmp = null;
@@ -64,11 +60,14 @@ public class MagicianActivity extends Activity {
                     // Do work to manage the connection (in a separate thread)
                     mConnectedThread = new ConnectedThread(socket);
                     mConnectedThread.start();
-                    Intent showCardIntent = new Intent(getApplicationContext(), ShowCardActivity.class);
+                    // Start new activity where magician waits for the
+                    // volunteer to pick a card
+                    Intent showCardIntent = new Intent
+                            (getApplicationContext(), ShowCardActivity.class);
                     startActivity(showCardIntent);
                     try {
                         mmServerSocket.close();
-                    } catch (IOException e) { /**/ }
+                    } catch (IOException e) { /* not handled */ }
                     break;
                 }
             }

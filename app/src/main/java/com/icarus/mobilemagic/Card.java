@@ -2,12 +2,11 @@ package com.icarus.mobilemagic;
 
 /**
  * A playing card that has a rank and suit.
- * @author Jason Mathews
  */
 public class Card {
 
-    private Rank rank;
-    private Suit suit;
+    private Rank mRank;
+    private Suit mSuit;
 
     /**
      * Default constructor creates an Ace of Spades.
@@ -18,19 +17,19 @@ public class Card {
 
     /**
      * Constructor that sets the rank and suit of this card.
-     * @param rank the rank for this card
+     * @param mRank the rank for this card
      * @param suit the suit for this card
      */
-    public Card (Rank rank, Suit suit) {
-        this.rank = rank;
-        this.suit = suit;
+    public Card (Rank mRank, Suit suit) {
+        this.mRank = mRank;
+        this.mSuit = suit;
     }
 
     /**
-     * Returns the string representation of this card.
+     * Returns the two-character string representation of this card.
      */
     @Override
     public final String toString() {
-        return "" + this.suit + this.rank;
+        return "" + this.mSuit + this.mRank;
     }
 }

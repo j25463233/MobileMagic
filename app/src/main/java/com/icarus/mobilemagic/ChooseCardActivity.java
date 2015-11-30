@@ -16,13 +16,21 @@ import android.widget.ImageButton;
 
 import java.io.IOException;
 
+/**
+ * Activity where a volunteer can choose a card from a deck. When a card is
+ * chosen, it is displayed on the screen and its ID is sent to the magician's
+ * device where it vibrates in a pattern according to the chosen card's rank
+ * and suit. The card is also displayed on the magician's device.
+ */
 public class ChooseCardActivity extends Activity {
 
+    /* Connection to the Magician */
     private ConnectedThread mConnectedThread;
-    private GridViewCustomAdapter mCardAdapter;
-    private GridView mGridView;
-    private Deck mDeck;
-    private Card[] mCardArray;
+
+    private Deck mDeck;                         // all of the cards
+    private Card[] mCardArray;                  // given to the adapter
+    private GridViewCustomAdapter mCardAdapter; // holds the array of cards
+    private GridView mGridView;                 // displays the cards
     private Button mShuffleButton;
 
     @Override
@@ -79,7 +87,6 @@ public class ChooseCardActivity extends Activity {
 
     /**
      * Thread that initiates a Bluetooth connection, as a client.
-     * Code borrowed and modified from android developer site.
      */
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
@@ -116,6 +123,9 @@ public class ChooseCardActivity extends Activity {
         }
     }
 
+    /**
+     * Custom ArrayAdapter for the GridView that displays the cards
+     */
     public class GridViewCustomAdapter extends ArrayAdapter {
         Context context;
         Card[] cards;
@@ -128,17 +138,20 @@ public class ChooseCardActivity extends Activity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final String id = "" + cards[position].toString();
-            final ImageButton buttonView;
+            final String id = "" + cards[position].toString(); // card id
+            final ImageButton buttonView; // a card the user can tap on
             View card = convertView;
 
             if (card == null) {
                 LayoutInflater inflater = ((Activity) context).getLayoutInflater();
                 card = inflater.inflate(R.layout.gridview_card, parent, false);
                 buttonView = (ImageButton) card.findViewById(R.id.card_button);
+                // display the image of the card with this id
                 buttonView.setBackgroundResource(getResources()
                         .getIdentifier(id, "drawable", getPackageName()));
                 buttonView.setTag(id);
+                // if user taps on this card, send the id to remote device
+                // and start a new activity that displays this card
                 buttonView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

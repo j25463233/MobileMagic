@@ -3,8 +3,6 @@ package com.icarus.mobilemagic;
 /**
  * Enumeration class for the ranks of cards.
  * Integer values: Ace = 1, ..., King = 13
- * @author Jason Mathews
- * @version 1.0
  */
 public enum Rank {
     ACE ("a", 1),

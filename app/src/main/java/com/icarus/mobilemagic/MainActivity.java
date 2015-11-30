@@ -10,9 +10,11 @@ import android.widget.Toast;
 
 import java.util.UUID;
 
+/**
+ * Activity where the user determines if this device will be the magician or
+ * the volunteer's device.
+ */
 public class MainActivity extends Activity {
-
-    // TODO: rename all fields to follow style guidelines
 
     public static final String NAME = "Mobile Magic";
     public static final String MY_UUID_STRING =
@@ -35,7 +37,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Check for Bluetooth capability, and if enabled
+        // Check for Bluetooth capability, and if Bluetooth is enabled
         if (mBluetoothAdapter == null) {
             Toast.makeText(this, "This device does not support Bluetooth",
                     Toast.LENGTH_LONG).show();
@@ -50,13 +52,14 @@ public class MainActivity extends Activity {
         mMagicianModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // everything is ok, start Magician activity
                 if (mBluetoothAdapter != null &&
                         mBluetoothAdapter.getScanMode() ==
                         BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
                     Intent magicianIntent = new Intent
                             (getApplicationContext(), MagicianActivity.class);
                     startActivity(magicianIntent);
-                } else {
+                } else { // request that this device become discoverable
                     Intent discoverableIntent = new
                             Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
                     startActivityForResult(discoverableIntent, REQUEST_DISCOVERABLE);
@@ -69,6 +72,7 @@ public class MainActivity extends Activity {
         mVolunteerModeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // start new activity where volunteer finds the magician
                 Intent volunteerIntent = new Intent
                         (getApplicationContext(), ConnectActivity.class);
                 startActivity(volunteerIntent);
@@ -76,30 +80,25 @@ public class MainActivity extends Activity {
         });
     }
 
+    /**
+     * Handles the result from an activity started by an intent.
+     */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
         switch (requestCode) {
-
             case REQUEST_ENABLE_BT:
+                // do nothing
                 break;
-
             case REQUEST_DISCOVERABLE:
+                // start new activity if device is now discoverable
                 if (mBluetoothAdapter.getScanMode() ==
                         BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
                     Intent magicianIntent = new Intent(this, MagicianActivity.class);
                     startActivity(magicianIntent);
+                } else {
+                    Toast.makeText(this, "A volunteer might not find you!",
+                            Toast.LENGTH_LONG).show();
                 }
                 break;
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }

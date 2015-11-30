@@ -4,7 +4,6 @@ import java.util.*;
 
 /**
  * Deck of playing cards.
- * @author Jason Mathews
  */
 public class Deck implements Iterable<Card> {
 
